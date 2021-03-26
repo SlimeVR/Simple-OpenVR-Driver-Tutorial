@@ -85,7 +85,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
             iss >> smoothFactor;
         }
         //save our pipe to global
-        this->AddDevice(std::make_shared<TrackerDevice>("AprilTracker"+std::to_string(i),pipe));
+        this->AddDevice(std::make_shared<TrackerDevice>("AprilTracker"+std::to_string(i),pipe, i));
     }
     
     // Add a couple tracking references

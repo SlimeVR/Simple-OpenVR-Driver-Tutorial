@@ -1,9 +1,10 @@
 #include "TrackerDevice.hpp"
 #include <Windows.h>
 
-ExampleDriver::TrackerDevice::TrackerDevice(std::string serial, HANDLE pipe):
+ExampleDriver::TrackerDevice::TrackerDevice(std::string serial, HANDLE pipe, int deviceId):
     serial_(serial), hpipe(pipe)
 {
+	this->deviceId = deviceId;
     this->last_pose_ = MakeDefaultPose();
     this->isSetup = false;
 }
@@ -128,10 +129,10 @@ vr::EVRInitError ExampleDriver::TrackerDevice::Activate(uint32_t unObjectId)
     GetDriver()->GetProperties()->SetUint64Property(props, vr::Prop_CurrentUniverseId_Uint64, 2);
     
     // Set up a model "number" (not needed but good to have)
-    GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_ModelNumber_String, "example_tracker");
+    GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_ModelNumber_String, "Vive Tracker Pro MV");
 
     // Opt out of hand selection
-    GetDriver()->GetProperties()->SetInt32Property(props, vr::Prop_ControllerRoleHint_Int32, vr::ETrackedControllerRole::TrackedControllerRole_OptOut);
+	GetDriver()->GetProperties()->SetInt32Property(props, vr::Prop_ControllerRoleHint_Int32, vr::ETrackedControllerRole::TrackedControllerRole_OptOut);
 
     // Set up a render model path
     GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_RenderModelName_String, "vr_controller_05_wireless_b");
@@ -149,6 +150,19 @@ vr::EVRInitError ExampleDriver::TrackerDevice::Activate(uint32_t unObjectId)
     GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceNotReady_String, "{example}/icons/tracker_not_ready.png");
     GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, "{example}/icons/tracker_not_ready.png");
     GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, "{example}/icons/tracker_not_ready.png");
+
+	switch (deviceId)
+	{
+	case 0:
+		GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_ControllerType_String, "vive_tracker_waist");
+		break;
+	case 1:
+		GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_ControllerType_String, "vive_tracker_left_foot");
+		break;
+	case 2:
+		GetDriver()->GetProperties()->SetStringProperty(props, vr::Prop_ControllerType_String, "vive_tracker_right_foot");
+		break;
+	}
 
     return vr::EVRInitError::VRInitError_None;
 }
