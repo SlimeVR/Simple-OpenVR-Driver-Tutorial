@@ -18,7 +18,7 @@ namespace ExampleDriver {
     class TrackerDevice : public IVRDevice {
         public:
 
-            TrackerDevice(std::string serial, HANDLE pipe);
+            TrackerDevice(std::string serial, HANDLE pipe, int deviceId);
             ~TrackerDevice() = default;
 
             // Inherited via IVRDevice
@@ -43,6 +43,7 @@ namespace ExampleDriver {
         char buffer[1024];
         DWORD dwWritten;
         DWORD dwRead;
+		int deviceId;
 
         vr::DriverPose_t last_pose_ = IVRDevice::MakeDefaultPose();
 
